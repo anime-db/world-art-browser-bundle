@@ -86,7 +86,7 @@ class Browser
         /* @var $response \Guzzle\Http\Message\Response */
         $response = $this->client->get($path)->send();
         if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server '.$this->host);
+            throw new \RuntimeException('Failed to query the server ' . $this->host);
         }
         if ($response->getStatusCode() != 200 || !($html = $response->getBody(true))) {
             return '';
