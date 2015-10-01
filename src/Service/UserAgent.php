@@ -84,7 +84,7 @@ class UserAgent
      */
     public function get($force = false)
     {
-        if ($force || !$this->user_agent) {
+        if ($force !== false || !$this->user_agent) {
             if ($request = $this->request_stack->getMasterRequest()) {
                 $this->user_agent = $request->server->get('HTTP_USER_AGENT', '');
             }
@@ -106,7 +106,7 @@ class UserAgent
      */
     protected function getUserAgentsFromFile()
     {
-        if (!$this->user_agents && $this->user_agent_file) {
+        if (empty($this->user_agents) && $this->user_agent_file) {
             $this->user_agents = (array) file($this->user_agent_file);
             $this->user_agents = array_map('trim', $this->user_agents);
         }
