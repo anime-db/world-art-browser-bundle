@@ -73,7 +73,7 @@ class UserAgent
         $this->request_stack = $request_stack;
         $this->user_agent_default = $user_agent_defaul;
         if ($user_agent_file) {
-            $this->user_agent_file = $file_locator->locate($user_agent_file);
+            $this->user_agent_file = (string)$file_locator->locate($user_agent_file);
         }
     }
 
@@ -107,7 +107,7 @@ class UserAgent
     protected function getUserAgentsFromFile()
     {
         if (!$this->user_agents && $this->user_agent_file) {
-            $this->user_agents = file($this->user_agent_file);
+            $this->user_agents = (array)file($this->user_agent_file);
             $this->user_agents = array_map('trim', $this->user_agents);
         }
         return $this->user_agents;

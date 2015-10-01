@@ -61,9 +61,7 @@ class Browser
         $this->host = $host;
 
         // set HTTP User-Agent
-        $this->client->setDefaultHeaders([
-            'User-Agent' => $user_agent->get()
-        ]);
+        $this->client->setDefaultOption('headers/User-Agent', $user_agent->get());
     }
 
     /**
@@ -90,7 +88,7 @@ class Browser
         if ($response->isError()) {
             throw new \RuntimeException('Failed to query the server '.$this->host);
         }
-        if ($response->getStatusCode() !== 200 || !($html = $response->getBody(true))) {
+        if ($response->getStatusCode() != 200 || !($html = $response->getBody(true))) {
             return '';
         }
         $html = iconv('windows-1251', 'utf-8', $html);
