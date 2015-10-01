@@ -1,0 +1,28 @@
+{
+	"name" : "anime-db/world-art-browser-bundle",
+	"license" : "GPL-3.0",
+	"type" : "library",
+	"description" : "World-Art.ru API browser",
+	"homepage" : "http://github.com/anime-db/world-art-browser-bundle",
+	"autoload" : {
+		"psr-4" : {
+			"AnimeDb\\Bundle\\WorldArtBrowserBundle\\" : "src/"
+		}
+	},
+	"autoload-dev" : {
+		"psr-4" : {
+			"AnimeDb\\Bundle\\WorldArtBrowserBundle\\Tests\\" : "tests/"
+		}
+	},
+	"require" : {
+		"php" : ">=5.3.3",
+		"ext-tidy" : "*",
+		"guzzle/guzzle" : ">=3.7.0"
+	},
+	"require-dev" : {
+		"symfony/dependency-injection" : ">=2.3.17",
+		"symfony/expression-language" : ">=2.3.17",
+		"symfony/config" : ">=2.3.17",
+		"symfony/http-kernel" : ">=2.3.17"
+	}
+}
