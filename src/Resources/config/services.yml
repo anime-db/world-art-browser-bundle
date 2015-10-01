@@ -4,13 +4,19 @@ services:
         arguments:
             - "@anime_db.world_art.browser.client"
             - "@anime_db.world_art.browser.tidy"
-            - "@request_stack"
+            - "@anime_db.world_art.browser.user_agent"
             - "%anime_db.world_art.host%"
-            - "%anime_db.world_art.user_agent%"
     anime_db.world_art.browser.client:
         class: Guzzle\Http\Client
         arguments: [ "%anime_db.world_art.host%" ]
         public: false
     anime_db.world_art.browser.tidy:
         class: tidy
+        public: false
+    anime_db.world_art.browser.user_agent:
+        class: AnimeDb\Bundle\WorldArtBrowserBundle\Service\UserAgent
+            - "@request_stack"
+            - "@file_locator"
+            - "%anime_db.world_art.user_agent%"
+            - "%anime_db.world_art.user_agent.file%"
         public: false

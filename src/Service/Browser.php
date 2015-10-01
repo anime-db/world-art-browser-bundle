@@ -11,7 +11,7 @@
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Service;
 
 use Guzzle\Http\Client;
-use Symfony\Component\HttpFoundation\RequestStack;
+use AnimeDb\Bundle\WorldArtBrowserBundle\Service\UserAgent;
 
 /**
  * Browser
@@ -47,27 +47,22 @@ class Browser
      *
      * @param \Guzzle\Http\Client $client
      * @param \tidy $tidy
-     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+     * @param \AnimeDb\Bundle\WorldArtBrowserBundle\Service\UserAgent $user_agent
      * @param string $host
-     * @param string $user_agent
      */
     public function __construct(
         Client $client,
         \tidy $tidy,
-        RequestStack $request_stack,
-        $host,
-        $user_agent
+        UserAgent $user_agent,
+        $host
     ) {
         $this->client = $client;
         $this->tidy = $tidy;
         $this->host = $host;
 
         // set HTTP User-Agent
-        if ($request = $request_stack->getMasterRequest()) {
-            $user_agent = $request->server->get('HTTP_USER_AGENT', $user_agent);
-        }
         $this->client->setDefaultHeaders([
-            'User-Agent' => $user_agent
+            'User-Agent' => $user_agent->get()
         ]);
     }
 
