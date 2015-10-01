@@ -15,6 +15,7 @@ services:
         public: false
     anime_db.world_art.browser.user_agent:
         class: AnimeDb\Bundle\WorldArtBrowserBundle\Service\UserAgent
+        arguments:
             - "@request_stack"
             - "@file_locator"
             - "%anime_db.world_art.user_agent%"
