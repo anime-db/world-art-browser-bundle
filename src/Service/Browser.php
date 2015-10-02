@@ -89,51 +89,66 @@ class Browser
      * Set HTTP User-Agent
      *
      * @param string $user_agent
+     *
+     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
      */
     public function setUserAgent($user_agent)
     {
         $this->client->setDefaultOption('headers/User-Agent', $user_agent);
+        return $this;
     }
 
     /**
      * Set timeout
      *
      * @param integer $timeout
+     *
+     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
      */
     public function setTimeout($timeout)
     {
         $this->client->setDefaultOption('timeout', $timeout);
+        return $this;
     }
 
     /**
      * Set proxy
      *
      * @param integer $proxy
+     *
+     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
      */
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
+        return $this;
     }
 
     /**
      * Set proxies
      *
      * @param array $proxies
+     *
+     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
      */
     public function setProxies(array $proxies)
     {
         $this->proxies = $proxies;
         $this->setRandomProxy();
+        return $this;
     }
 
     /**
      * Select a random proxy
+     *
+     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
      */
     public function setRandomProxy()
     {
         if ($this->proxies) {
             $this->setProxy($this->proxies[array_rand($this->proxies)]);
         }
+        return $this;
     }
 
     /**

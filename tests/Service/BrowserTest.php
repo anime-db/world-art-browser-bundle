@@ -132,7 +132,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo('headers/User-Agent'),
                 $this->equalTo($user_agent)
             );
-        $this->getBrowser()->setUserAgent($user_agent);
+        $browser = $this->getBrowser();
+        $this->assertEquals($browser, $browser->setUserAgent($user_agent));
     }
 
     /**
@@ -148,7 +149,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo('timeout'),
                 $this->equalTo($timeout)
             );
-        $this->getBrowser()->setTimeout($timeout);
+        $browser = $this->getBrowser();
+        $this->assertEquals($browser, $browser->setTimeout($timeout));
     }
 
     /**
@@ -164,7 +166,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo('proxy'),
                 $this->equalTo($proxy)
             );
-        $this->getBrowser()->setProxy($proxy);
+        $browser = $this->getBrowser();
+        $this->assertEquals($browser, $browser->setProxy($proxy));
     }
 
     /**
@@ -181,7 +184,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $that->assertEquals('proxy', $keyOrPath);
                 $that->assertContains($value, $proxies);
             });
-        $this->getBrowser()->setProxies($proxies);
+        $browser = $this->getBrowser();
+        $this->assertEquals($browser, $browser->setProxies($proxies));
     }
 
     /**
@@ -192,7 +196,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->never())
             ->method('setDefaultOption');
-        $this->getBrowser()->setRandomProxy();
+        $browser = $this->getBrowser();
+        $this->assertEquals($browser, $browser->setRandomProxy());
     }
 
     /**
