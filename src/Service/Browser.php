@@ -64,7 +64,7 @@ class Browser
         if (($request = $request_stack->getMasterRequest()) &&
             ($user_agent = $request->server->get('HTTP_USER_AGENT'))
         ) {
-            $this->client->setDefaultOption('headers/User-Agent', $user_agent);
+            $this->setUserAgent($user_agent);
         }
     }
 
@@ -76,6 +76,16 @@ class Browser
     public function getHost()
     {
         return $this->host;
+    }
+
+    /**
+     * Set HTTP User-Agent
+     *
+     * @param string $user_agent
+     */
+    public function setUserAgent($user_agent)
+    {
+        $this->client->setDefaultOption('headers/User-Agent', $user_agent);
     }
 
     /**

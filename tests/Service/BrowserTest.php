@@ -119,6 +119,19 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->host, $this->getBrowser()->getHost());
     }
 
+    public function testSetUserAgent()
+    {
+        $user_agent = 'Example user agent';
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultOption')
+            ->with(
+                $this->equalTo('headers/User-Agent'),
+                $this->equalTo($user_agent)
+            );
+        $this->getBrowser()->setUserAgent($user_agent);
+    }
+
     /**
      * Test error get
      *
