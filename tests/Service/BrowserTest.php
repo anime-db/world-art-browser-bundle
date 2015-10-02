@@ -120,54 +120,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Get response
-     *
-     * @param string $path
-     * @param boolean $is_error
-     * @param integer $status_code
-     * @param string $body
-     *
-     * @return PHPUnit_Framework_MockObject_MockObject
-     */
-    protected function getResponse($path, $is_error, $status_code = 0, $body = '')
-    {
-        $request = $this->getMockBuilder('\Guzzle\Http\Message\Request')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $response = $this->getMockBuilder('\Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->client
-            ->expects($this->once())
-            ->method('get')
-            ->willReturn($request)
-            ->with($this->equalTo($path));
-        $request
-            ->expects($this->once())
-            ->method('send')
-            ->willReturn($response);
-        $response
-            ->expects($this->once())
-            ->method('isError')
-            ->willReturn($is_error);
-
-        if (!$is_error) {
-            $response
-                ->expects($this->once())
-                ->method('getStatusCode')
-                ->willReturn($status_code);
-            if ($status_code == 200) {
-                $response
-                    ->expects($this->once())
-                    ->method('getBody')
-                    ->willReturn($body)
-                    ->with($this->equalTo(true));
-            }
-        }
-        return $response;
-    }
-
-    /**
      * Test error get
      *
      * @expectedException \RuntimeException
@@ -252,5 +204,53 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             $this->request_stack,
             $this->host
         );
+    }
+
+    /**
+     * Get response
+     *
+     * @param string $path
+     * @param boolean $is_error
+     * @param integer $status_code
+     * @param string $body
+     *
+     * @return PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getResponse($path, $is_error, $status_code = 0, $body = '')
+    {
+        $request = $this->getMockBuilder('\Guzzle\Http\Message\Request')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $response = $this->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->client
+            ->expects($this->once())
+            ->method('get')
+            ->willReturn($request)
+            ->with($this->equalTo($path));
+        $request
+            ->expects($this->once())
+            ->method('send')
+            ->willReturn($response);
+        $response
+            ->expects($this->once())
+            ->method('isError')
+            ->willReturn($is_error);
+
+        if (!$is_error) {
+            $response
+                ->expects($this->once())
+                ->method('getStatusCode')
+                ->willReturn($status_code);
+            if ($status_code == 200) {
+                $response
+                    ->expects($this->once())
+                    ->method('getBody')
+                    ->willReturn($body)
+                    ->with($this->equalTo(true));
+            }
+        }
+        return $response;
     }
 }
