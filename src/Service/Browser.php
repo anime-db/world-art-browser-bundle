@@ -99,6 +99,16 @@ class Browser
     }
 
     /**
+     * Set proxy
+     *
+     * @param integer $proxy
+     */
+    public function setProxy($proxy)
+    {
+        $this->client->setDefaultOption('proxy', $proxy);
+    }
+
+    /**
      * Get data from path
      *
      * @param string $path

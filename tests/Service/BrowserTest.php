@@ -152,6 +152,22 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test set proxy
+     */
+    public function testSetProxy()
+    {
+        $proxy = '127.0.0.1';
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultOption')
+            ->with(
+                $this->equalTo('proxy'),
+                $this->equalTo($proxy)
+            );
+        $this->getBrowser()->setProxy($proxy);
+    }
+
+    /**
      * Test error get
      *
      * @expectedException \RuntimeException
