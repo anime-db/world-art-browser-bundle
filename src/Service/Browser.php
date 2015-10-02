@@ -89,6 +89,16 @@ class Browser
     }
 
     /**
+     * Set timeout
+     *
+     * @param integer $timeout
+     */
+    public function setTimeout($timeout)
+    {
+        $this->client->setDefaultOption('timeout', $timeout);
+    }
+
+    /**
      * Get data from path
      *
      * @param string $path

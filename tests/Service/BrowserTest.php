@@ -119,6 +119,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->host, $this->getBrowser()->getHost());
     }
 
+    /**
+     * Test set user agent
+     */
     public function testSetUserAgent()
     {
         $user_agent = 'Example user agent';
@@ -130,6 +133,22 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $this->equalTo($user_agent)
             );
         $this->getBrowser()->setUserAgent($user_agent);
+    }
+
+    /**
+     * Test set timeout
+     */
+    public function testSetTimeout()
+    {
+        $timeout = 123;
+        $this->client
+            ->expects($this->once())
+            ->method('setDefaultOption')
+            ->with(
+                $this->equalTo('timeout'),
+                $this->equalTo($timeout)
+            );
+        $this->getBrowser()->setTimeout($timeout);
     }
 
     /**
