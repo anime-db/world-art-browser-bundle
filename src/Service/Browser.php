@@ -145,7 +145,7 @@ class Browser
      */
     public function setRandomProxy()
     {
-        if ($this->proxies) {
+        if (!empty($this->proxies)) {
             $this->setProxy($this->proxies[array_rand($this->proxies)]);
         }
         return $this;
