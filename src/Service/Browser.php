@@ -33,14 +33,21 @@ class Browser
      *
      * @var \Guzzle\Http\Client
      */
-    private $client;
+    protected $client;
 
     /**
      * Tidy
      *
      * @var \tidy
      */
-    private $tidy;
+    protected $tidy;
+
+    /**
+     * Proxies
+     *
+     * @var array
+     */
+    protected $proxies = array();
 
     /**
      * Construct
@@ -106,6 +113,27 @@ class Browser
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
+    }
+
+    /**
+     * Set proxies
+     *
+     * @param array $proxies
+     */
+    public function setProxies(array $proxies)
+    {
+        $this->proxies = $proxies;
+        $this->setRandomProxy();
+    }
+
+    /**
+     * Select a random proxy
+     */
+    public function setRandomProxy()
+    {
+        if ($this->proxies) {
+            $this->setProxy($this->proxies[array_rand($this->proxies)]);
+        }
     }
 
     /**
