@@ -167,7 +167,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->willReturn($html_tidy)
             ->with(
                 $this->equalTo($html),
-                $this->equalTo([
+                $this->equalTo(array(
                     'output-xhtml' => true,
                     'indent' => true,
                     'indent-spaces' => 0,
@@ -175,7 +175,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                     'hide-comments' => true,
                     'drop-empty-paras' => true,
                     'wrap' => false
-                ]),
+                )),
                 $this->equalTo('utf8')
             );
         $this->tidy

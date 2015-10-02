@@ -98,7 +98,7 @@ class Browser
         $html = iconv('windows-1251', 'utf-8', $html);
 
         // clean content
-        $config = [
+        $config = array(
             'output-xhtml' => true,
             'indent' => true,
             'indent-spaces' => 0,
@@ -106,7 +106,7 @@ class Browser
             'hide-comments' => true,
             'drop-empty-paras' => true,
             'wrap' => false
-        ];
+        );
         $this->tidy->parseString($html, $config, 'utf8');
         $this->tidy->cleanRepair();
         $html = $this->tidy->root()->value;
