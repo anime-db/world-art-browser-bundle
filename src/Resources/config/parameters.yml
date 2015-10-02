@@ -1,4 +1,2 @@
 parameters:
     anime_db.world_art.host: 'http://www.world-art.ru'
-    anime_db.world_art.user_agent: null
-    anime_db.world_art.user_agent.file: '@AnimeDbWorldArtBrowserBundle/Resources/private/user_agent.txt'
