@@ -258,7 +258,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $html = 'dsafflkjasdbf';
         $html_tidy = 'dsafflkjasdbf<noembed>asdasd</noembed> bvgfdgdfg <noindex>xczxc</noindex>sdsdad';
         $expected = 'dsafflkjasdbf bvgfdgdfg sdsdad';
-        $node = new \stdClass();
+        $node = new \stdClass(); // can't mock tidyNode
         $this->tidy
             ->expects($this->once())
             ->method('parseString')
