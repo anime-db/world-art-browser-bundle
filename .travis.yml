@@ -20,6 +20,7 @@ notifications:
     email: dev@anime-db.org
 
 before_script:
+    - phpenv config-add tests/config.ini
     - composer self-update
     - composer --version
     - composer install --dev --prefer-dist
