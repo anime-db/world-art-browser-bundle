@@ -43,13 +43,6 @@ class Browser
     protected $tidy;
 
     /**
-     * Proxies
-     *
-     * @var array
-     */
-    protected $proxies = array();
-
-    /**
      * Construct
      *
      * @param \Guzzle\Http\Client $client
@@ -121,33 +114,6 @@ class Browser
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
-        return $this;
-    }
-
-    /**
-     * Set proxies
-     *
-     * @param array $proxies
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-     */
-    public function setProxies(array $proxies)
-    {
-        $this->proxies = $proxies;
-        $this->setRandomProxy();
-        return $this;
-    }
-
-    /**
-     * Select a random proxy
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-     */
-    public function setRandomProxy()
-    {
-        if (!empty($this->proxies)) {
-            $this->setProxy($this->proxies[array_rand($this->proxies)]);
-        }
         return $this;
     }
 

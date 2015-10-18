@@ -184,40 +184,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test set proxies
-     */
-    public function testSetProxies()
-    {
-        $proxies = array('127.0.0.1', 'localhost', '::1');
-        $that = $this;
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->willReturnCallback(function($keyOrPath, $value) use ($that, $proxies) {
-                $that->assertEquals('proxy', $keyOrPath);
-                $that->assertContains($value, $proxies);
-            });
-        $this->assertEquals(
-            $this->getBrowser(),
-            $this->getBrowser()->setProxies($proxies)
-        );
-    }
-
-    /**
-     * Test set random proxy empty
-     */
-    public function testSetRandomProxyEmpty()
-    {
-        $this->client
-            ->expects($this->never())
-            ->method('setDefaultOption');
-        $this->assertEquals(
-            $this->getBrowser(),
-            $this->getBrowser()->setRandomProxy()
-        );
-    }
-
-    /**
      * Test error get
      *
      * @expectedException \RuntimeException
