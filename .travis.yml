@@ -20,7 +20,8 @@ notifications:
     email: dev@anime-db.org
 
 before_script:
-    - phpenv config-add tests/config.ini
+    - pecl install tidy
+    - echo "extension=tidy.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
     - composer self-update
     - composer --version
     - composer install --dev --prefer-dist
