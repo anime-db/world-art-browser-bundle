@@ -110,10 +110,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setDefaultOption')
-            ->with(
-                $this->equalTo('headers/User-Agent'),
-                $this->equalTo($user_agent)
-            );
+            ->with('headers/User-Agent', $user_agent);
 
         $this->getBrowser();
     }
@@ -135,10 +132,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setDefaultOption')
-            ->with(
-                $this->equalTo('headers/User-Agent'),
-                $this->equalTo($user_agent)
-            );
+            ->with('headers/User-Agent', $user_agent);
         $this->assertEquals(
             $this->getBrowser(),
             $this->getBrowser()->setUserAgent($user_agent)
@@ -154,10 +148,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setDefaultOption')
-            ->with(
-                $this->equalTo('timeout'),
-                $this->equalTo($timeout)
-            );
+            ->with('timeout', $timeout);
         $this->assertEquals(
             $this->getBrowser(),
             $this->getBrowser()->setTimeout($timeout)
@@ -173,10 +164,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->client
             ->expects($this->once())
             ->method('setDefaultOption')
-            ->with(
-                $this->equalTo('proxy'),
-                $this->equalTo($proxy)
-            );
+            ->with('proxy', $proxy);
         $this->assertEquals(
             $this->getBrowser(),
             $this->getBrowser()->setProxy($proxy)
@@ -230,8 +218,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->method('parseString')
             ->willReturn($html_tidy)
             ->with(
-                $this->equalTo($html),
-                $this->equalTo(array(
+                $html,
+                array(
                     'output-xhtml' => true,
                     'indent' => true,
                     'indent-spaces' => 0,
@@ -239,8 +227,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                     'hide-comments' => true,
                     'drop-empty-paras' => true,
                     'wrap' => false
-                )),
-                $this->equalTo('utf8')
+                ),
+                'utf8'
             );
         $this->tidy
             ->expects($this->once())
@@ -295,7 +283,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('get')
             ->willReturn($request)
-            ->with($this->equalTo($path));
+            ->with($path);
         $request
             ->expects($this->once())
             ->method('send')
@@ -315,7 +303,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                     ->expects($this->once())
                     ->method('getBody')
                     ->willReturn($body)
-                    ->with($this->equalTo(true));
+                    ->with(true);
             }
         }
         return $response;
