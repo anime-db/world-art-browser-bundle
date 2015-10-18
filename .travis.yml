@@ -8,6 +8,14 @@ php:
     - 7.0
     - hhvm
 
+os:
+    - linux
+    - osx
+
+matrix:
+    allow_failures:
+      - os: osx
+
 notifications:
     email: dev@anime-db.org
 
