@@ -9,7 +9,6 @@ services:
 
     anime_db.world_art.browser.client:
         class: Guzzle\Http\Client
-        arguments: [ "%anime_db.world_art.host%" ]
         public: false
 
     anime_db.world_art.browser.tidy:

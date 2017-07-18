@@ -24,12 +24,12 @@ class Browser
     /**
      * @var Client
      */
-    protected $client;
+    private $client;
 
     /**
      * @var \tidy
      */
-    protected $tidy;
+    private $tidy;
 
     /**
      * @param Client $client
@@ -101,7 +101,7 @@ class Browser
     public function get($path)
     {
         /* @var $response Response */
-        $response = $this->client->get($path)->send();
+        $response = $this->client->get($this->host.$path)->send();
 
         if ($response->isError()) {
             throw new \RuntimeException('Failed to query the server ' . $this->host);
