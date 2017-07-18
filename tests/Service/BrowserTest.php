@@ -12,9 +12,10 @@
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser;
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Request;
-use Guzzle\Http\Message\Response;
+use AnimeDb\Bundle\WorldArtBrowserBundle\Service\ResponseRepair;
+use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -29,14 +30,24 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $app_client = 'My Custom Bot 1.0';
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|Client
+     * @var \PHPUnit_Framework_MockObject_MockObject|HttpClient
      */
     private $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|\tidy
+     * @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface
      */
-    private $tidy;
+    private $stream;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|MessageInterface
+     */
+    private $message;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
+     */
+    private $repair;
 
     /**
      * @var Browser
@@ -45,218 +56,56 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = $this->getMock(Client::class);
-        $this->tidy = $this->getMock(\tidy::class);
-        $this->browser = null;
-    }
-
-    public function testNoUserAgent()
-    {
-        $this->client
-            ->expects($this->never())
-            ->method('setDefaultOption')
+        $this->client = $this->getMock(HttpClient::class);
+        $this->stream = $this->getMock(StreamInterface::class);
+        $this->message = $this->getMock(MessageInterface::class);
+        $this->repair = $this
+            ->getMockBuilder(ResponseRepair::class)
+            ->disableOriginalConstructor()
+            ->getMock()
         ;
 
-        new Browser($this->client, $this->tidy, $this->host, '');
-    }
-
-    public function testHasUserAgent()
-    {
-        $this->client
-            ->expects($this->once())
-            ->method('setDefaultOption')
-            ->with('headers/User-Agent', $this->app_client)
-        ;
-
-        $this->getBrowser();
-    }
-
-    public function testGetHost()
-    {
-        $this->assertEquals($this->host, $this->getBrowser()->getHost());
-    }
-
-    public function testSetUserAgent()
-    {
-        $user_agent = 'Example user agent';
-
-        $this->client
-            ->expects($this->at(1))
-            ->method('setDefaultOption')
-            ->with('headers/User-Agent', $user_agent)
-        ;
-
-        $this->assertEquals($this->getBrowser(), $this->getBrowser()->setUserAgent($user_agent));
-    }
-
-    public function testSetTimeout()
-    {
-        $timeout = 123;
-        $this->client
-            ->expects($this->at(1))
-            ->method('setDefaultOption')
-            ->with('timeout', $timeout)
-        ;
-
-        $this->assertEquals($this->getBrowser(), $this->getBrowser()->setTimeout($timeout));
-    }
-
-    public function testSetProxy()
-    {
-        $proxy = '127.0.0.1';
-
-        $this->client
-            ->expects($this->at(1))
-            ->method('setDefaultOption')
-            ->with('proxy', $proxy)
-        ;
-
-        $this->assertEquals($this->getBrowser(), $this->getBrowser()->setProxy($proxy));
-    }
-
-    /**
-     * @expectedException \RuntimeException
-     */
-    public function testGetError()
-    {
-        $path = '/example/path/';
-        $this->getResponse($path, true);
-        $this->getBrowser()->get($path);
-    }
-
-    public function testGetErrorBadStatus()
-    {
-        $path = '/example/path/';
-        $this->getResponse($path, false, 301);
-
-        $this->assertEmpty($this->getBrowser()->get($path));
-    }
-
-    public function testGetErrorEmptyBody()
-    {
-        $path = '/example/path/';
-        $this->getResponse($path, false, 200, '');
-
-        $this->assertEmpty($this->getBrowser()->get($path));
+        $this->browser = new Browser($this->client, $this->repair, $this->host, $this->app_client);
     }
 
     public function testGet()
     {
-        $path = '/example/path/';
-        $html = 'dsafflkjasdbf';
-        $html_tidy = 'dsafflkjasdbf<noembed>asdasd</noembed> bvgfdgdfg <noindex>xczxc</noindex>sdsdad';
-        $expected = 'dsafflkjasdbf bvgfdgdfg sdsdad';
-        $node = new \stdClass(); // can't mock tidyNode
+        $path = '/foo';
+        $params = ['bar' => 'baz'];
+        $options = $params + [
+            'headers' => [
+                'User-Agent' => $this->app_client,
+            ],
+        ];
+        $content = 'Hello, world!';
+        $repair = 'foo';
 
-        $this->tidy
+        $this->stream
             ->expects($this->once())
-            ->method('parseString')
-            ->willReturn($html_tidy)
-            ->with(
-                $html,
-                array(
-                    'output-xhtml' => true,
-                    'indent' => true,
-                    'indent-spaces' => 0,
-                    'fix-backslash' => true,
-                    'hide-comments' => true,
-                    'drop-empty-paras' => true,
-                    'wrap' => false
-                ),
-                'utf8'
-            )
+            ->method('getContents')
+            ->will($this->returnValue($content))
         ;
-        $this->tidy
+
+        $this->message
             ->expects($this->once())
-            ->method('cleanRepair')
-        ;
-        $this->tidy
-            ->expects($this->once())
-            ->method('root')
-            ->willReturn($node)
-        ;
-
-        $node->value = $html_tidy;
-
-        $this->getResponse($path, false, 200, $html);
-
-        $this->assertEquals($expected, $this->getBrowser()->get($path));
-    }
-
-    /**
-     * @return Browser
-     */
-    private function getBrowser()
-    {
-        if (!$this->browser) {
-            $this->browser = new Browser(
-                $this->client,
-                $this->tidy,
-                $this->host,
-                $this->app_client
-            );
-        }
-
-        return $this->browser;
-    }
-
-    /**
-     * @param string  $path
-     * @param boolean $is_error
-     * @param integer $status_code
-     * @param string  $body
-     *
-     * @return \PHPUnit_Framework_MockObject_MockObject
-     */
-    private function getResponse($path, $is_error, $status_code = 0, $body = '')
-    {
-        $request = $this
-            ->getMockBuilder(Request::class)
-            ->disableOriginalConstructor()
-            ->getMock()
-        ;
-
-        $response = $this
-            ->getMockBuilder(Response::class)
-            ->disableOriginalConstructor()
-            ->getMock()
+            ->method('getBody')
+            ->will($this->returnValue($this->stream))
         ;
 
         $this->client
             ->expects($this->once())
-            ->method('get')
-            ->willReturn($request)
-            ->with($path)
+            ->method('request')
+            ->with('GET', $this->host.$path, $options)
+            ->will($this->returnValue($this->message))
         ;
 
-        $request
+        $this->repair
             ->expects($this->once())
-            ->method('send')
-            ->willReturn($response)
-        ;
-        $response
-            ->expects($this->once())
-            ->method('isError')
-            ->willReturn($is_error)
+            ->method('repair')
+            ->with($content)
+            ->will($this->returnValue($repair))
         ;
 
-        if (!$is_error) {
-            $response
-                ->expects($this->once())
-                ->method('getStatusCode')
-                ->willReturn($status_code)
-            ;
-
-            if ($status_code == 200) {
-                $response
-                    ->expects($this->once())
-                    ->method('getBody')
-                    ->willReturn($body)
-                    ->with(true)
-                ;
-            }
-        }
-
-        return $response;
+        $this->assertEquals($repair, $this->browser->get($path, $params));
     }
 }
