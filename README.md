@@ -35,6 +35,20 @@ public function registerBundles()
 }
 ```
 
+Configuration
+-------------
+
+```yml
+anime_db_world_art_browser:
+    # Host name
+    # As a default used 'http://www.world-art.ru'
+    host: 'http://www.world-art.ru'
+
+    # HTTP User-Agent
+    # No default value
+    client: 'My Custom Bot 1.0'
+```
+
 License
 -------
 

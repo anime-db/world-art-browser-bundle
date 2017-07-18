@@ -37,8 +37,9 @@ class Browser
      * @param \tidy        $tidy
      * @param RequestStack $request_stack
      * @param string       $host
+     * @param string       $app_client
      */
-    public function __construct(Client $client, \tidy $tidy, RequestStack $request_stack, $host)
+    public function __construct(Client $client, \tidy $tidy, RequestStack $request_stack, $host, $app_client)
     {
         $this->client = $client;
         $this->tidy = $tidy;
@@ -49,6 +50,8 @@ class Browser
             ($user_agent = $request->server->get('HTTP_USER_AGENT'))
         ) {
             $this->setUserAgent($user_agent);
+        } elseif ($app_client) {
+            $this->setUserAgent($app_client);
         }
     }
 
