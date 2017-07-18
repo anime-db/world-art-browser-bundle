@@ -1,11 +1,7 @@
 services:
     anime_db.world_art.browser:
         class: AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-        arguments:
-            - '@anime_db.world_art.browser.client'
-            - '@anime_db.world_art.browser.repair'
-            - ~
-            - ~
+        arguments: [ '@anime_db.world_art.browser.client', '@anime_db.world_art.browser.repair', ~, ~ ]
 
     anime_db.world_art.browser.repair:
         class: AnimeDb\Bundle\WorldArtBrowserBundle\Service\ResponseRepair
