@@ -1,5 +1,7 @@
 language: php
 
+sudo: false
+
 notifications:
     email: deploy@anime-db.org
 
