@@ -49,6 +49,15 @@ anime_db_world_art_browser:
     client: 'My Custom Bot 1.0'
 ```
 
+Usage
+-----
+
+Get info for anime [Akira](http://www.world-art.ru/animation/animation.php?id=1):
+
+```php
+$content = $this->get('anime_db.world_art.browser')->get('/animation/animation.php', ['id' => 1]);
+```
+
 License
 -------
 
