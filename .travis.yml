@@ -25,7 +25,7 @@ before_script:
     - composer install --prefer-dist --no-interaction --no-scripts --no-progress
 
 script:
-    - vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+    - vendor/bin/phpunit --coverage-clover build/coverage-clover.xml
 
 after_script:
     - vendor/bin/ocular code-coverage:upload --format=php-clover build/coverage-clover.xml
