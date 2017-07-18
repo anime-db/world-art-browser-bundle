@@ -1,9 +1,8 @@
 <?php
 
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -40,15 +39,15 @@ class ResponseRepair
         $content = iconv('windows-1251', 'utf-8', $content);
 
         // clean content
-        $config = array(
+        $config = [
             'output-xhtml' => true,
             'indent' => true,
             'indent-spaces' => 0,
             'fix-backslash' => true,
             'hide-comments' => true,
             'drop-empty-paras' => true,
-            'wrap' => false
-        );
+            'wrap' => false,
+        ];
         $this->tidy->parseString($content, $config, 'utf8');
         $this->tidy->cleanRepair();
         $content = $this->tidy->root()->value;
