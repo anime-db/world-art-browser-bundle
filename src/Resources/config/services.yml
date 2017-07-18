@@ -6,10 +6,12 @@ services:
             - "@anime_db.world_art.browser.tidy"
             - "@request_stack"
             - "%anime_db.world_art.host%"
+
     anime_db.world_art.browser.client:
         class: Guzzle\Http\Client
         arguments: [ "%anime_db.world_art.host%" ]
         public: false
+
     anime_db.world_art.browser.tidy:
         class: tidy
         public: false

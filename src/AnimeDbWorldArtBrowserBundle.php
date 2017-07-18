@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package
  *
@@ -12,12 +13,6 @@ namespace AnimeDb\Bundle\WorldArtBrowserBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Bundle
- *
- * @package AnimeDb\Bundle\WorldArtBrowserBundle
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class AnimeDbWorldArtBrowserBundle extends Bundle
 {
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package
  *
@@ -15,17 +16,11 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
-/**
- * DependencyInjection
- *
- * @package AnimeDb\Bundle\WorldArtBrowserBundle\DependencyInjection
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class AnimeDbWorldArtBrowserExtension extends Extension
 {
     /**
-     * (non-PHPdoc)
-     * @see \Symfony\Component\DependencyInjection\Extension\ExtensionInterface::load()
+     * @param array            $configs
+     * @param ContainerBuilder $container
      */
     public function load(array $configs, ContainerBuilder $container)
     {

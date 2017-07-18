@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package
  *
@@ -11,21 +12,28 @@
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Tests\DependencyInjection;
 
 use AnimeDb\Bundle\WorldArtBrowserBundle\DependencyInjection\AnimeDbWorldArtBrowserExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-/**
- * Test DependencyInjection
- *
- * @package AnimeDb\Bundle\WorldArtBrowserBundle\Tests\DependencyInjection
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class AnimeDbWorldArtBrowserExtensionTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * Test load
+     * @var \PHPUnit_Framework_MockObject_MockObject|ContainerBuilder
      */
+    private $container;
+
+    /**
+     * @var AnimeDbWorldArtBrowserExtension
+     */
+    private $extension;
+
+    protected function setUp()
+    {
+        $this->container = $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder');
+        $this->extension = new AnimeDbWorldArtBrowserExtension();
+    }
+
     public function testLoad()
     {
-        $di = new AnimeDbWorldArtBrowserExtension();
-        $di->load(array(), $this->getMock('Symfony\Component\DependencyInjection\ContainerBuilder'));
+        $this->extension->load(array(), $this->container);
     }
 }

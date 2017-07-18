@@ -1,4 +1,5 @@
 <?php
+
 /**
  * AnimeDb package
  *
@@ -11,51 +12,34 @@
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Service;
 
 use Guzzle\Http\Client;
+use Guzzle\Http\Message\Response;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-/**
- * Browser
- *
- * @package AnimeDb\Bundle\WorldArtBrowserBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Browser
 {
     /**
-     * Host
-     *
      * @var string
      */
     private $host;
 
     /**
-     * HTTP client
-     *
-     * @var \Guzzle\Http\Client
+     * @var Client
      */
     protected $client;
 
     /**
-     * Tidy
-     *
      * @var \tidy
      */
     protected $tidy;
 
     /**
-     * Construct
-     *
-     * @param \Guzzle\Http\Client $client
-     * @param \tidy $tidy
-     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-     * @param string $host
+     * @param Client       $client
+     * @param \tidy        $tidy
+     * @param RequestStack $request_stack
+     * @param string       $host
      */
-    public function __construct(
-        Client $client,
-        \tidy $tidy,
-        RequestStack $request_stack,
-        $host
-    ) {
+    public function __construct(Client $client, \tidy $tidy, RequestStack $request_stack, $host)
+    {
         $this->client = $client;
         $this->tidy = $tidy;
         $this->host = $host;
@@ -69,8 +53,6 @@ class Browser
     }
 
     /**
-     * Get host
-     *
      * @return string
      */
     public function getHost()
@@ -79,61 +61,59 @@ class Browser
     }
 
     /**
-     * Set HTTP User-Agent
-     *
      * @param string $user_agent
      *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
+     * @return self
      */
     public function setUserAgent($user_agent)
     {
         $this->client->setDefaultOption('headers/User-Agent', $user_agent);
+
         return $this;
     }
 
     /**
-     * Set timeout
+     * @param int $timeout
      *
-     * @param integer $timeout
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
+     * @return self
      */
     public function setTimeout($timeout)
     {
         $this->client->setDefaultOption('timeout', $timeout);
+
         return $this;
     }
 
     /**
-     * Set proxy
+     * @param int $proxy
      *
-     * @param integer $proxy
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
+     * @return self
      */
     public function setProxy($proxy)
     {
         $this->client->setDefaultOption('proxy', $proxy);
+
         return $this;
     }
 
     /**
-     * Get data from path
-     *
      * @param string $path
      *
      * @return string
      */
     public function get($path)
     {
-        /* @var $response \Guzzle\Http\Message\Response */
+        /* @var $response Response */
         $response = $this->client->get($path)->send();
+
         if ($response->isError()) {
             throw new \RuntimeException('Failed to query the server ' . $this->host);
         }
+
         if ($response->getStatusCode() != 200 || !($html = $response->getBody(true))) {
             return '';
         }
+
         $html = iconv('windows-1251', 'utf-8', $html);
 
         // clean content
