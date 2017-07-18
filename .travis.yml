@@ -10,7 +10,6 @@ notifications:
     email: deploy@anime-db.org
 
 before_script:
-    - composer --version
     - composer install --dev --prefer-dist
 
 script:
