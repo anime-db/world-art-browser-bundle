@@ -1,8 +1,8 @@
 <?php
+
 /**
- * AnimeDb package
+ * AnimeDb package.
  *
- * @package   AnimeDb
  * @author    Peter Gribanov <info@peter-gribanov.ru>
  * @copyright Copyright (c) 2011, Peter Gribanov
  * @license   http://opensource.org/licenses/GPL-3.0 GPL v3
@@ -10,150 +10,61 @@
 
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Service;
 
-use Guzzle\Http\Client;
-use Symfony\Component\HttpFoundation\RequestStack;
+use GuzzleHttp\Client;
 
-/**
- * Browser
- *
- * @package AnimeDb\Bundle\WorldArtBrowserBundle\Service
- * @author  Peter Gribanov <info@peter-gribanov.ru>
- */
 class Browser
 {
     /**
-     * Host
-     *
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var ResponseRepair
+     */
+    private $repair;
+
+    /**
      * @var string
      */
     private $host;
 
     /**
-     * HTTP client
-     *
-     * @var \Guzzle\Http\Client
+     * @var string
      */
-    protected $client;
+    private $app_client;
 
     /**
-     * Tidy
-     *
-     * @var \tidy
+     * @param Client         $client
+     * @param ResponseRepair $repair
+     * @param string         $host
+     * @param string         $app_client
      */
-    protected $tidy;
-
-    /**
-     * Construct
-     *
-     * @param \Guzzle\Http\Client $client
-     * @param \tidy $tidy
-     * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
-     * @param string $host
-     */
-    public function __construct(
-        Client $client,
-        \tidy $tidy,
-        RequestStack $request_stack,
-        $host
-    ) {
+    public function __construct(Client $client, ResponseRepair $repair, $host, $app_client)
+    {
         $this->client = $client;
-        $this->tidy = $tidy;
+        $this->repair = $repair;
         $this->host = $host;
-
-        // set HTTP User-Agent
-        if (($request = $request_stack->getMasterRequest()) &&
-            ($user_agent = $request->server->get('HTTP_USER_AGENT'))
-        ) {
-            $this->setUserAgent($user_agent);
-        }
+        $this->app_client = $app_client;
     }
 
     /**
-     * Get host
-     *
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * Set HTTP User-Agent
-     *
-     * @param string $user_agent
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-     */
-    public function setUserAgent($user_agent)
-    {
-        $this->client->setDefaultOption('headers/User-Agent', $user_agent);
-        return $this;
-    }
-
-    /**
-     * Set timeout
-     *
-     * @param integer $timeout
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-     */
-    public function setTimeout($timeout)
-    {
-        $this->client->setDefaultOption('timeout', $timeout);
-        return $this;
-    }
-
-    /**
-     * Set proxy
-     *
-     * @param integer $proxy
-     *
-     * @return \AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser
-     */
-    public function setProxy($proxy)
-    {
-        $this->client->setDefaultOption('proxy', $proxy);
-        return $this;
-    }
-
-    /**
-     * Get data from path
-     *
      * @param string $path
+     * @param array  $options
      *
      * @return string
      */
-    public function get($path)
+    public function get($path, array $options = [])
     {
-        /* @var $response \Guzzle\Http\Message\Response */
-        $response = $this->client->get($path)->send();
-        if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server ' . $this->host);
+        if ($this->app_client) {
+            $options['headers'] = isset($options['headers']) ? $options['headers'] : [];
+            $options['headers']['User-Agent'] = $this->app_client;
         }
-        if ($response->getStatusCode() != 200 || !($html = $response->getBody(true))) {
-            return '';
-        }
-        $html = iconv('windows-1251', 'utf-8', $html);
 
-        // clean content
-        $config = array(
-            'output-xhtml' => true,
-            'indent' => true,
-            'indent-spaces' => 0,
-            'fix-backslash' => true,
-            'hide-comments' => true,
-            'drop-empty-paras' => true,
-            'wrap' => false
-        );
-        $this->tidy->parseString($html, $config, 'utf8');
-        $this->tidy->cleanRepair();
-        $html = $this->tidy->root()->value;
+        $response = $this->client->request('GET', $this->host.$path, $options);
 
-        // ignore blocks
-        $html = preg_replace('/<noembed>.*?<\/noembed>/is', '', $html);
-        $html = preg_replace('/<noindex>.*?<\/noindex>/is', '', $html);
+        $content = $response->getBody()->getContents();
 
-        return $html;
+        return $this->repair->repair($content);
     }
 }
