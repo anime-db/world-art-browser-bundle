@@ -13,11 +13,8 @@ namespace AnimeDb\Bundle\WorldArtBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser;
 use Guzzle\Http\Client;
-use Guzzle\Http\Message\Request as GuzzleRequest;
+use Guzzle\Http\Message\Request;
 use Guzzle\Http\Message\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\ServerBag;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -42,11 +39,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $tidy;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|RequestStack
-     */
-    private $request_stack;
-
-    /**
      * @var Browser
      */
     private $browser;
@@ -55,59 +47,25 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $this->client = $this->getMock(Client::class);
         $this->tidy = $this->getMock(\tidy::class);
-        $this->request_stack = $this->getMock(RequestStack::class);
+        $this->browser = null;
     }
 
     public function testNoUserAgent()
     {
-        $request = $this->getMock(Request::class);
-
-        $request->server = $this->getMock(ServerBag::class);
-        $request->server
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue('HTTP_USER_AGENT'))
-            ->willReturn('')
-        ;
-
-        $this->request_stack
-            ->expects($this->once())
-            ->method('getMasterRequest')
-            ->willReturn($request)
-        ;
-
         $this->client
             ->expects($this->never())
             ->method('setDefaultOption')
         ;
 
-        $this->getBrowser();
+        new Browser($this->client, $this->tidy, $this->host, '');
     }
 
     public function testHasUserAgent()
     {
-        $user_agent = 'Example user agent';
-
-        $request = $this->getMock(Request::class);
-
-        $request->server = $this->getMock(ServerBag::class);
-        $request->server
-            ->expects($this->once())
-            ->method('get')
-            ->will($this->returnValue('HTTP_USER_AGENT'))
-            ->willReturn($user_agent)
-        ;
-
-        $this->request_stack
-            ->expects($this->once())
-            ->method('getMasterRequest')
-            ->willReturn($request)
-        ;
-
         $this->client
             ->expects($this->once())
             ->method('setDefaultOption')
-            ->with('headers/User-Agent', $user_agent)
+            ->with('headers/User-Agent', $this->app_client)
         ;
 
         $this->getBrowser();
@@ -121,8 +79,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     public function testSetUserAgent()
     {
         $user_agent = 'Example user agent';
+
         $this->client
-            ->expects($this->once())
+            ->expects($this->at(1))
             ->method('setDefaultOption')
             ->with('headers/User-Agent', $user_agent)
         ;
@@ -134,7 +93,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $timeout = 123;
         $this->client
-            ->expects($this->once())
+            ->expects($this->at(1))
             ->method('setDefaultOption')
             ->with('timeout', $timeout)
         ;
@@ -147,7 +106,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $proxy = '127.0.0.1';
 
         $this->client
-            ->expects($this->once())
+            ->expects($this->at(1))
             ->method('setDefaultOption')
             ->with('proxy', $proxy)
         ;
@@ -233,7 +192,6 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
             $this->browser = new Browser(
                 $this->client,
                 $this->tidy,
-                $this->request_stack,
                 $this->host,
                 $this->app_client
             );
@@ -253,7 +211,7 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private function getResponse($path, $is_error, $status_code = 0, $body = '')
     {
         $request = $this
-            ->getMockBuilder(GuzzleRequest::class)
+            ->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;

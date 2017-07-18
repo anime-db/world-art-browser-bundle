@@ -4,7 +4,6 @@ services:
         arguments:
             - "@anime_db.world_art.browser.client"
             - "@anime_db.world_art.browser.tidy"
-            - "@request_stack"
             - ~
             - ~
 
