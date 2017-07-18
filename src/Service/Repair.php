@@ -33,6 +33,10 @@ class ResponseRepair
      */
     public function repair($content)
     {
+        if (!$content) {
+            return '';
+        }
+
         $content = iconv('windows-1251', 'utf-8', $content);
 
         // clean content

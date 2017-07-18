@@ -7,13 +7,13 @@ services:
             - ~
             - ~
 
-    anime_db.world_art.browser.client:
-        class: Guzzle\Http\Client
-        public: false
-
     anime_db.world_art.browser.repair:
         class: AnimeDb\Bundle\WorldArtBrowserBundle\Service\ResponseRepair
         arguments: [ '@anime_db.world_art.browser.tidy' ]
+        public: false
+
+    anime_db.world_art.browser.client:
+        class: GuzzleHttp\Client
         public: false
 
     anime_db.world_art.browser.tidy:

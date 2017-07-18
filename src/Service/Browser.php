@@ -11,8 +11,7 @@
 
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Service;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Message\Response;
+use GuzzleHttp\Client;
 
 class Browser
 {
@@ -32,6 +31,11 @@ class Browser
     private $host;
 
     /**
+     * @var string
+     */
+    private $app_client;
+
+    /**
      * @param Client         $client
      * @param ResponseRepair $repair
      * @param string         $host
@@ -42,30 +46,25 @@ class Browser
         $this->client = $client;
         $this->repair = $repair;
         $this->host = $host;
-
-        // set HTTP User-Agent
-        if ($app_client) {
-            $this->setUserAgent($app_client);
-        }
+        $this->app_client = $app_client;
     }
 
     /**
      * @param string $path
+     * @param array  $options
      *
      * @return string
      */
-    public function get($path)
+    public function get($path, array $options = [])
     {
-        /* @var $response Response */
-        $response = $this->client->get($this->host.$path)->send();
-
-        if ($response->isError()) {
-            throw new \RuntimeException('Failed to query the server ' . $this->host);
+        if ($this->app_client) {
+            $options['headers'] = isset($options['headers']) ? $options['headers'] : [];
+            $options['headers']['User-Agent'] = $this->app_client;
         }
 
-        if ($response->getStatusCode() != 200 || !($content = $response->getBody(true))) {
-            return '';
-        }
+        $response = $this->client->request('GET', $this->host.$path, $options);
+
+        $content = $response->getBody()->getContents();
 
         return $this->repair->repair($content);
     }
