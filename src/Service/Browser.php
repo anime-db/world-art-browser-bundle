@@ -27,20 +27,20 @@ class Browser
     private $client;
 
     /**
-     * @var \tidy
+     * @var ResponseRepair
      */
-    private $tidy;
+    private $repair;
 
     /**
-     * @param Client $client
-     * @param \tidy  $tidy
-     * @param string $host
-     * @param string $app_client
+     * @param Client         $client
+     * @param ResponseRepair $repair
+     * @param string         $host
+     * @param string         $app_client
      */
-    public function __construct(Client $client, \tidy $tidy, $host, $app_client)
+    public function __construct(Client $client, ResponseRepair $repair, $host, $app_client)
     {
         $this->client = $client;
-        $this->tidy = $tidy;
+        $this->repair = $repair;
         $this->host = $host;
 
         // set HTTP User-Agent
@@ -107,30 +107,10 @@ class Browser
             throw new \RuntimeException('Failed to query the server ' . $this->host);
         }
 
-        if ($response->getStatusCode() != 200 || !($html = $response->getBody(true))) {
+        if ($response->getStatusCode() != 200 || !($content = $response->getBody(true))) {
             return '';
         }
 
-        $html = iconv('windows-1251', 'utf-8', $html);
-
-        // clean content
-        $config = array(
-            'output-xhtml' => true,
-            'indent' => true,
-            'indent-spaces' => 0,
-            'fix-backslash' => true,
-            'hide-comments' => true,
-            'drop-empty-paras' => true,
-            'wrap' => false
-        );
-        $this->tidy->parseString($html, $config, 'utf8');
-        $this->tidy->cleanRepair();
-        $html = $this->tidy->root()->value;
-
-        // ignore blocks
-        $html = preg_replace('/<noembed>.*?<\/noembed>/is', '', $html);
-        $html = preg_replace('/<noindex>.*?<\/noindex>/is', '', $html);
-
-        return $html;
+        return $this->repair->repair($content);
     }
 }
