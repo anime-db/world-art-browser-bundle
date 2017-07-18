@@ -1,11 +1,13 @@
 <img src="http://www.world-art.ru/img/logo.gif" /><br />
 
-[![Latest Stable Version](https://poser.pugx.org/anime-db/world-art-browser-bundle/v/stable.png)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
-[![Latest Unstable Version](https://poser.pugx.org/anime-db/world-art-browser-bundle/v/unstable.png)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
-[![Build Status](https://travis-ci.org/anime-db/world-art-browser-bundle.png)](https://travis-ci.org/anime-db/world-art-browser-bundle)
-[![Code Coverage](https://scrutinizer-ci.com/g/anime-db/world-art-browser-bundle/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/anime-db/world-art-browser-bundle/?branch=master)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/ecc1f470-e9f7-4972-b503-7ee0d77de3ab/mini.png)](https://insight.sensiolabs.com/projects/ecc1f470-e9f7-4972-b503-7ee0d77de3ab)
-[![License](https://poser.pugx.org/anime-db/world-art-browser-bundle/license.png)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
+[![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/world-art-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
+[![Build Status](https://img.shields.io/travis/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://travis-ci.org/anime-db/world-art-browser-bundle)
+[![Coverage Status](https://img.shields.io/coveralls/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://coveralls.io/github/anime-db/world-art-browser-bundle?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://scrutinizer-ci.com/g/anime-db/world-art-browser-bundle/?branch=master)
+[![SensioLabs Insight](https://img.shields.io/sensiolabs/i/ecc1f470-e9f7-4972-b503-7ee0d77de3ab.svg?maxAge=3600&label=SLInsight)](https://insight.sensiolabs.com/projects/ecc1f470-e9f7-4972-b503-7ee0d77de3ab)
+[![StyleCI](https://styleci.io/repos/43503665/shield?branch=master)](https://styleci.io/repos/43503665)
+[![License](https://img.shields.io/packagist/l/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://github.com/anime-db/world-art-browser-bundle)
 
 world-art-browser-bundle
 ========================
