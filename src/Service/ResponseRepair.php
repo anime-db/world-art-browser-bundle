@@ -18,6 +18,19 @@ class ResponseRepair
     private $tidy;
 
     /**
+     * @var array
+     */
+    private $config = [
+        'output-xhtml' => true,
+        'indent' => true,
+        'indent-spaces' => 0,
+        'fix-backslash' => true,
+        'hide-comments' => true,
+        'drop-empty-paras' => true,
+        'wrap' => false,
+    ];
+
+    /**
      * @param \tidy $tidy
      */
     public function __construct(\tidy $tidy)
@@ -39,16 +52,7 @@ class ResponseRepair
         $content = iconv('windows-1251', 'utf-8', $content);
 
         // clean content
-        $config = [
-            'output-xhtml' => true,
-            'indent' => true,
-            'indent-spaces' => 0,
-            'fix-backslash' => true,
-            'hide-comments' => true,
-            'drop-empty-paras' => true,
-            'wrap' => false,
-        ];
-        $this->tidy->parseString($content, $config, 'utf8');
+        $this->tidy->parseString($content, $this->config, 'utf8');
         $this->tidy->cleanRepair();
         $content = $this->tidy->root()->value;
 
