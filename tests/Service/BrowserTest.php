@@ -13,14 +13,23 @@ namespace AnimeDb\Bundle\WorldArtBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser;
 use Guzzle\Http\Client;
+use Guzzle\Http\Message\Request as GuzzleRequest;
+use Guzzle\Http\Message\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\ServerBag;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var string
      */
-    private $host;
+    private $host = 'example.org';
+
+    /**
+     * @var string
+     */
+    private $app_client = 'My Custom Bot 1.0';
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|Client
@@ -44,17 +53,16 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->host = 'example.org';
-        $this->client = $this->getMock('\Guzzle\Http\Client');
-        $this->tidy = $this->getMock('\tidy');
-        $this->request_stack = $this->getMock('\Symfony\Component\HttpFoundation\RequestStack');
+        $this->client = $this->getMock(Client::class);
+        $this->tidy = $this->getMock(\tidy::class);
+        $this->request_stack = $this->getMock(RequestStack::class);
     }
 
     public function testNoUserAgent()
     {
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->getMock(Request::class);
 
-        $request->server = $this->getMock('\Symfony\Component\HttpFoundation\ServerBag');
+        $request->server = $this->getMock(ServerBag::class);
         $request->server
             ->expects($this->once())
             ->method('get')
@@ -80,9 +88,9 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     {
         $user_agent = 'Example user agent';
 
-        $request = $this->getMock('\Symfony\Component\HttpFoundation\Request');
+        $request = $this->getMock(Request::class);
 
-        $request->server = $this->getMock('\Symfony\Component\HttpFoundation\ServerBag');
+        $request->server = $this->getMock(ServerBag::class);
         $request->server
             ->expects($this->once())
             ->method('get')
@@ -226,7 +234,8 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 $this->client,
                 $this->tidy,
                 $this->request_stack,
-                $this->host
+                $this->host,
+                $this->app_client
             );
         }
 
@@ -244,13 +253,13 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private function getResponse($path, $is_error, $status_code = 0, $body = '')
     {
         $request = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Request')
+            ->getMockBuilder(GuzzleRequest::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
         $response = $this
-            ->getMockBuilder('\Guzzle\Http\Message\Response')
+            ->getMockBuilder(Response::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
