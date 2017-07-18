@@ -1,4 +1,4 @@
-<img src="http://www.world-art.ru/img/logo.gif" /><br />
+[![World Art](http://www.world-art.ru/img/logo.gif)](http://www.world-art.ru)
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/anime-db/world-art-browser-bundle.svg?maxAge=3600&label=stable)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
 [![Total Downloads](https://img.shields.io/packagist/dt/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://packagist.org/packages/anime-db/world-art-browser-bundle)
@@ -9,7 +9,34 @@
 [![StyleCI](https://styleci.io/repos/43503665/shield?branch=master)](https://styleci.io/repos/43503665)
 [![License](https://img.shields.io/packagist/l/anime-db/world-art-browser-bundle.svg?maxAge=3600)](https://github.com/anime-db/world-art-browser-bundle)
 
-world-art-browser-bundle
+World-Art.ru API browser
 ========================
 
-World-Art.ru API browser
+Installation
+------------
+
+Pretty simple with [Composer](http://packagist.org), run:
+
+```sh
+composer require anime-db/world-art-browser-bundle
+```
+
+Add AnimeDbWorldArtBrowserBundle to your application kernel
+
+```php
+// app/appKernel.php
+
+public function registerBundles()
+{
+    $bundles = array(
+        // ...
+        new AnimeDb\Bundle\WorldArtBrowserBundle\AnimeDbWorldArtBrowserBundle(),
+    );
+}
+```
+
+License
+-------
+
+This bundle is under the [GPL v3 license](http://opensource.org/licenses/GPL-3.0).
+See the complete license in the file: LICENSE
