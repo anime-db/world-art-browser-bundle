@@ -17,11 +17,6 @@ use Guzzle\Http\Message\Response;
 class Browser
 {
     /**
-     * @var string
-     */
-    private $host;
-
-    /**
      * @var Client
      */
     private $client;
@@ -30,6 +25,11 @@ class Browser
      * @var ResponseRepair
      */
     private $repair;
+
+    /**
+     * @var string
+     */
+    private $host;
 
     /**
      * @param Client         $client
@@ -47,50 +47,6 @@ class Browser
         if ($app_client) {
             $this->setUserAgent($app_client);
         }
-    }
-
-    /**
-     * @return string
-     */
-    public function getHost()
-    {
-        return $this->host;
-    }
-
-    /**
-     * @param string $user_agent
-     *
-     * @return self
-     */
-    public function setUserAgent($user_agent)
-    {
-        $this->client->setDefaultOption('headers/User-Agent', $user_agent);
-
-        return $this;
-    }
-
-    /**
-     * @param int $timeout
-     *
-     * @return self
-     */
-    public function setTimeout($timeout)
-    {
-        $this->client->setDefaultOption('timeout', $timeout);
-
-        return $this;
-    }
-
-    /**
-     * @param int $proxy
-     *
-     * @return self
-     */
-    public function setProxy($proxy)
-    {
-        $this->client->setDefaultOption('proxy', $proxy);
-
-        return $this;
     }
 
     /**
