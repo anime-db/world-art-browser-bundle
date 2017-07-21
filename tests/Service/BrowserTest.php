@@ -67,7 +67,23 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $this->browser = new Browser($this->client, $this->repair, $this->host, $this->app_client);
     }
 
-    public function testGet()
+    /**
+     * @return array
+     */
+    public function appClients()
+    {
+        return [
+            [''],
+            ['Override User Agent'],
+        ];
+    }
+
+    /**
+     * @dataProvider appClients
+     *
+     * @param string $app_client
+     */
+    public function testGet($app_client)
     {
         $path = '/foo';
         $params = ['bar' => 'baz'];
@@ -76,6 +92,12 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
                 'User-Agent' => $this->app_client,
             ],
         ];
+
+        if ($app_client) {
+            $options['headers']['User-Agent'] = $app_client;
+            $params['headers']['User-Agent'] = $app_client;
+        }
+
         $content = 'Hello, world!';
         $repair = 'foo';
 

@@ -57,8 +57,10 @@ class Browser
     public function get($path, array $options = [])
     {
         if ($this->app_client) {
-            $options['headers'] = isset($options['headers']) ? $options['headers'] : [];
-            $options['headers']['User-Agent'] = $this->app_client;
+            $options['headers'] = array_merge(
+                ['User-Agent' => $this->app_client],
+                isset($options['headers']) ? $options['headers'] : []
+            );
         }
 
         $response = $this->client->request('GET', $this->host.$path, $options);
