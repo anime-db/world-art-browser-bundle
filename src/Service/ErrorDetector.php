@@ -56,7 +56,7 @@ class ErrorDetector
     }
 
     /**
-     * Is not a Akira
+     * Is not a Akira.
      *
      * @see http://www.world-art.ru/animation/animation.php?id=1
      *
