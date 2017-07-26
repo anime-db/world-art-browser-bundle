@@ -37,16 +37,15 @@ class ErrorDetector
 
         // return anime Akira page if anime not found
         // example http://www.world-art.ru/animation/animation.php?id=10000000
-        if (strpos($path, '/animation/animation.php') !== false) {
-            // check ID in options
-            if (isset($options['query']['id']) && $this->isNotAkira($options['query']['id'], $content)) {
-                throw NotFoundException::anime($options['query']['id']);
-            }
-
-            // check ID in path
-            if (preg_match('/\?id=(\d+)/', $path, $match) && $this->isNotAkira($match[1], $content)) {
-                throw NotFoundException::anime($match[1]);
-            }
+        if (strpos($path, '/animation/animation.php') !== false &&
+            (
+                // check ID in options
+                (isset($options['query']['id']) && $this->isNotAkira($id = $options['query']['id'], $content)) ||
+                // check ID in path
+                (preg_match('/\?id=(\d+)/', $path, $match) && $this->isNotAkira($id = $match[1], $content))
+            )
+        ) {
+            throw NotFoundException::anime($id);
         }
 
         return $content;
