@@ -31,10 +31,7 @@ class ErrorDetector
 
         $content = $response->getBody()->getContents();
 
-        if (
-            strpos($content, 'url=http://www.world-art.ru/not_connect.html') !== false ||
-            strpos($content, 'NETGEAR ProSecure') !== false
-        ) {
+        if ($this->isBanned($content)) {
             throw BannedException::banned();
         }
 
@@ -53,6 +50,19 @@ class ErrorDetector
         }
 
         return $content;
+    }
+
+    /**
+     * @param string $content
+     *
+     * @return bool
+     */
+    private function isBanned($content)
+    {
+        return
+            strpos($content, 'url=http://www.world-art.ru/not_connect.html') !== false ||
+            strpos($content, 'NETGEAR ProSecure') !== false
+        ;
     }
 
     /**
