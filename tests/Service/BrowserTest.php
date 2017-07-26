@@ -11,10 +11,10 @@
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Tests\Service;
 
 use AnimeDb\Bundle\WorldArtBrowserBundle\Service\Browser;
+use AnimeDb\Bundle\WorldArtBrowserBundle\Service\ErrorDetector;
 use AnimeDb\Bundle\WorldArtBrowserBundle\Service\ResponseRepair;
 use GuzzleHttp\Client as HttpClient;
-use Psr\Http\Message\MessageInterface;
-use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\ResponseInterface;
 
 class BrowserTest extends \PHPUnit_Framework_TestCase
 {
@@ -34,19 +34,19 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     private $client;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|StreamInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|ResponseInterface
      */
-    private $stream;
-
-    /**
-     * @var \PHPUnit_Framework_MockObject_MockObject|MessageInterface
-     */
-    private $message;
+    private $response;
 
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|ResponseRepair
      */
     private $repair;
+
+    /**
+     * @var \PHPUnit_Framework_MockObject_MockObject|ErrorDetector
+     */
+    private $detector;
 
     /**
      * @var Browser
@@ -56,15 +56,15 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->client = $this->getMock(HttpClient::class);
-        $this->stream = $this->getMock(StreamInterface::class);
-        $this->message = $this->getMock(MessageInterface::class);
+        $this->response = $this->getMock(ResponseInterface::class);
+        $this->detector = $this->getMock(ErrorDetector::class);
         $this->repair = $this
             ->getMockBuilder(ResponseRepair::class)
             ->disableOriginalConstructor()
             ->getMock()
         ;
 
-        $this->browser = new Browser($this->client, $this->repair, $this->host, $this->app_client);
+        $this->browser = new Browser($this->client, $this->repair, $this->detector, $this->host, $this->app_client);
     }
 
     /**
@@ -101,25 +101,19 @@ class BrowserTest extends \PHPUnit_Framework_TestCase
         $content = 'Hello, world!';
         $repair = 'foo';
 
-        $this->stream
-            ->expects($this->once())
-            ->method('getContents')
-            ->will($this->returnValue($content))
-        ;
-
-        $this->message
-            ->expects($this->once())
-            ->method('getBody')
-            ->will($this->returnValue($this->stream))
-        ;
-
         $this->client
             ->expects($this->once())
             ->method('request')
             ->with('GET', $this->host.$path, $options)
-            ->will($this->returnValue($this->message))
+            ->will($this->returnValue($this->response))
         ;
 
+        $this->detector
+            ->expects($this->once())
+            ->method('detect')
+            ->with($this->response, $path, $options)
+            ->will($this->returnValue($content))
+        ;
         $this->repair
             ->expects($this->once())
             ->method('repair')

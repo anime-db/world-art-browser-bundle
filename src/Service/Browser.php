@@ -10,12 +10,12 @@
 
 namespace AnimeDb\Bundle\WorldArtBrowserBundle\Service;
 
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
 
 class Browser
 {
     /**
-     * @var Client
+     * @var HttpClient
      */
     private $client;
 
@@ -23,6 +23,11 @@ class Browser
      * @var ResponseRepair
      */
     private $repair;
+
+    /**
+     * @var ErrorDetector
+     */
+    private $detector;
 
     /**
      * @var string
@@ -35,15 +40,22 @@ class Browser
     private $app_client;
 
     /**
-     * @param Client         $client
+     * @param HttpClient     $client
      * @param ResponseRepair $repair
+     * @param ErrorDetector  $detector
      * @param string         $host
      * @param string         $app_client
      */
-    public function __construct(Client $client, ResponseRepair $repair, $host, $app_client)
-    {
+    public function __construct(
+        HttpClient $client,
+        ResponseRepair $repair,
+        ErrorDetector $detector,
+        $host,
+        $app_client
+    ) {
         $this->client = $client;
         $this->repair = $repair;
+        $this->detector = $detector;
         $this->host = $host;
         $this->app_client = $app_client;
     }
@@ -65,8 +77,9 @@ class Browser
 
         $response = $this->client->request('GET', $this->host.$path, $options);
 
-        $content = $response->getBody()->getContents();
+        $content = $this->detector->detect($response, $path, $options);
+        $content = $this->repair->repair($content);
 
-        return $this->repair->repair($content);
+        return $content;
     }
 }

@@ -52,10 +52,33 @@ anime_db_world_art_browser:
 Usage
 -----
 
+First get browser
+
+```php
+$browser = $this->get('anime_db.world_art.browser');
+```
+
 Get info for anime [Akira](http://www.world-art.ru/animation/animation.php?id=1):
 
 ```php
-$content = $this->get('anime_db.world_art.browser')->get('/animation/animation.php', ['id' => 1]);
+$content = $browser->get('/animation/animation.php?id=1');
+```
+
+Catch exceptions
+
+```php
+use AnimeDb\Bundle\WorldArtBrowserBundle\Exception\BannedException;
+use AnimeDb\Bundle\WorldArtBrowserBundle\Exception\NotFoundException;
+
+try {
+    $content = $browser->get('/animation/animation.php?id=1');
+} catch (BannedException $e) {
+    // you are banned
+} catch (NotFoundException $e) {
+    // page not found
+} catch (\Exception $e) {
+    // other exceptions
+}
 ```
 
 License
