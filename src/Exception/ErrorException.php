@@ -12,13 +12,4 @@ namespace AnimeDb\Bundle\WorldArtBrowserBundle\Exception;
 
 class ErrorException extends \RuntimeException
 {
-    /**
-     * @param string $message
-     *
-     * @return ErrorException
-     */
-    public static function error($message)
-    {
-        return new self($message);
-    }
 }
