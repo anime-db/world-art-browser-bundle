@@ -137,7 +137,18 @@ class ErrorDetectorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider notAkira
+     * @return array
+     */
+    public function akira()
+    {
+        return [
+            ['/animation/animation.php', ['query' => ['id' => 1]]],
+            ['/animation/animation.php?id=1', []],
+        ];
+    }
+
+    /**
+     * @dataProvider akira
      *
      * @param string $path
      * @param array  $options

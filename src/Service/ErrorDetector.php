@@ -35,15 +35,9 @@ class ErrorDetector
             throw BannedException::banned();
         }
 
-        // return anime Akira page if anime not found
-        // example http://www.world-art.ru/animation/animation.php?id=10000000
-        if (strpos($path, '/animation/animation.php') !== false &&
-            (
-                // check ID in options
-                (isset($options['query']['id']) && $this->isNotAkira($id = $options['query']['id'], $content)) ||
-                // check ID in path
-                (preg_match('/\?id=(\d+)/', $path, $match) && $this->isNotAkira($id = $match[1], $content))
-            )
+        if (
+            strpos($path, '/animation/animation.php') !== false &&
+            ($id = $this->isAkiraSubstitution($content, $path, $options))
         ) {
             throw NotFoundException::anime($id);
         }
@@ -62,6 +56,32 @@ class ErrorDetector
             strpos($content, 'url=http://www.world-art.ru/not_connect.html') !== false ||
             strpos($content, 'NETGEAR ProSecure') !== false
         ;
+    }
+
+    /**
+     * Return anime Akira page if anime not found.
+     *
+     * @see http://www.world-art.ru/animation/animation.php?id=10000000
+     *
+     * @param string $content
+     * @param string $path
+     * @param array  $options
+     *
+     * @return int
+     */
+    private function isAkiraSubstitution($content, $path, array $options)
+    {
+        // check ID in options
+        if (isset($options['query']['id']) && $this->isNotAkira($options['query']['id'], $content)) {
+            return $options['query']['id'];
+        }
+
+        // check ID in path
+        if (preg_match('/\?id=(\d+)/', $path, $match) && $this->isNotAkira($match[1], $content)) {
+            return $match[1];
+        }
+
+        return 0;
     }
 
     /**
