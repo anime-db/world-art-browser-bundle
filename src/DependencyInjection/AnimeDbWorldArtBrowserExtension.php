@@ -29,8 +29,8 @@ class AnimeDbWorldArtBrowserExtension extends Extension
         $config = $this->processConfiguration(new Configuration(), $configs);
 
         $container->getDefinition('anime_db.world_art.browser')
-            ->replaceArgument(2, $config['host'])
-            ->replaceArgument(3, $config['client'])
+            ->replaceArgument(3, $config['host'])
+            ->replaceArgument(4, $config['client'])
         ;
     }
 }

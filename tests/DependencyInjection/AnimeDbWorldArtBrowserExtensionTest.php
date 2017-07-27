@@ -69,13 +69,13 @@ class AnimeDbWorldArtBrowserExtensionTest extends \PHPUnit_Framework_TestCase
         $browser
             ->expects($this->at(0))
             ->method('replaceArgument')
-            ->with(2, $host)
+            ->with(3, $host)
             ->will($this->returnSelf())
         ;
         $browser
             ->expects($this->at(1))
             ->method('replaceArgument')
-            ->with(3, $client)
+            ->with(4, $client)
             ->will($this->returnSelf())
         ;
 
